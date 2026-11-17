@@ -37,7 +37,8 @@ Données complètes, affichage minimaliste :
 - Lignes de texte au-dessus du graphique : prix spot actuel, injection aujourd'hui, rémunération aujourd'hui. Cela permet de visualiser les données avant même qu'elles ne soient tracées ; l'étape 1 peut être vérifiée via la valeur « Injection aujourd'hui ».
 - Graphique : **uniquement la courbe des prix** (cyan, `COL_PRICE`), sur 1 jour avec 96 valeurs par quart d'heure, axe en Rp./kWh à droite, ligne zéro, repère « maintenant » (gris), légende générée par `chart_curves()`. Couleurs identiques à l'image finale ; `COL_ENERGY` (vert), `COL_NEG` (orange), `COL_PAY` (jaune) et `COL_COST` (rouge) sont déjà définies.
 - Le simulateur intègre une baisse des prix à la mi-journée, avec des tarifs négatifs (cas de test pour l'étape 2).
-- Utilitaires disponibles : `chart_curves()`, `send_polyline(...)`, `value_range(...)`, `nice_range(...)` (pour des graduations d'axe arrondies), `y_scale(...)`, `send_data_attr(...)` (valeurs pour le curseur), constantes de couleur `COL_...`, accès aux données via `self.store.price(key, slot)` (en 1/10 000 CHF/kWh) et `self.store.energy_at(key, slot)` (en 0,01 kWh) — une valeur `nil` indique une donnée manquante. - Commentaires `# POINT D'EXTENSION Étape 1` … `Étape 4` au début de `F3 Chart` ; chaque
+- Utilitaires disponibles : `chart_curves()`, `send_polyline(...)`, `value_range(...)`, `nice_range(...)` (pour des graduations d'axe arrondies), `y_scale(...)`, `send_data_attr(...)` (valeurs pour le curseur), constantes de couleur `COL_...`, accès aux données via `self.store.price(key, slot)` (en 1/10 000 CHF/kWh) et `self.store.energy_at(key, slot)` (en 0,01 kWh) — une valeur `nil` indique une donnée manquante. 
+- Commentaires `# POINT D'EXTENSION Étape 1` … `Étape 4` au début de `F3 Chart` ; chaque
 point de contrôle ne contient plus que les éléments correspondant aux étapes en cours.
 - Script du curseur identique à toutes les étapes : il affiche chaque valeur présente (`data-p`, `data-e`,
 `data-v`) et calcule la durée à partir de `data-m` (15 ou 60 min). Aucune étape ne modifie ce script.
@@ -77,7 +78,8 @@ Pour basculer de l'un à l'autre, utilisez la touche **`Tab`** (ou `Maj+Tab`) ; 
 opencode démarre dans l'agent **build**. Chaque étape se déroule comme suit :
 
 1. **Passer à l'agent plan** : appuyez sur `Tab` jusqu'à ce que `Plan` s'affiche en bas.
-2. Saisissez la consigne de « planification » pour l'étape en cours et validez. Examinez le plan ; s'il s'écarte des directives (apparition de boucles infinies, cases à cocher, JavaScript, etc.), refusez-le dans l'agent plan, rappelez la consigne initiale et demandez un nouveau plan. Ne poursuivez que lorsque le plan est conforme. 3. **Passer en mode « build »** : appuyez sur la touche `Tab` jusqu'à ce que « Build » s'affiche en bas.
+2. Saisissez la consigne de « planification » pour l'étape en cours et validez. Examinez le plan ; s'il s'écarte des directives (apparition de boucles infinies, cases à cocher, JavaScript, etc.), refusez-le dans l'agent plan, rappelez la consigne initiale et demandez un nouveau plan. Ne poursuivez que lorsque le plan est conforme. 
+3. **Passer en mode « build »** : appuyez sur la touche `Tab` jusqu'à ce que « Build » s'affiche en bas.
 4. Saisissez et envoyez la consigne « mettre en œuvre » (valable pour toutes les étapes, en bas). Autorisez les commandes shell une par une
 (uniquement `./upload.sh`, `./log.sh`, `./brcmd.sh`, `berry`, `cp`, `git`).
 5. Signalez toute erreur survenue dans l'agent **build** en utilisant la consigne « signaler l'erreur » (ne changez pas de mode).
@@ -211,7 +213,7 @@ Raison : effectuer 72 × 4 accès au stockage par courbe dépasserait la limite 
 - **Tas (Heap)** : mesurer `tasmota.gc()` et `heap_free` avant et après la modification, puis signaler la différence. 
 Si la baisse dépasse 5 ko lors du rendu : interrompre l'opération.
 
-### Prompt « planen » (dans l'agent `plan`, onglet « Plan » tout en bas)
+### Prompt « planifier » (dans l'agent `plan`, onglet « Plan » tout en bas)
 
 ```
 Consultez la section « F3 Chart » dans `@app/spot.be`, marquée par le commentaire « ERWEITERUNGSPUNKT Schritt 3 » (Point d'extension - Étape 3).

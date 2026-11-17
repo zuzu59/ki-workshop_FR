@@ -84,7 +84,9 @@ Rien à faire : l'accès à Infomaniak prévu pour l'atelier est déjà intégr�
 ```sh
 ./docker-run.sh
 ```
-Résultat attendu : l'interface opencode s'affiche, avec le modèle `Qwen3.5 122B-A10B (Infomaniak AI (Schweiz))` indiqué en bas. 4. Saisir la première question :
+Résultat attendu : l'interface opencode s'affiche, avec le modèle `Qwen3.5 122B-A10B (Infomaniak AI (Schweiz))` indiqué en bas. 
+
+4. Saisir la première question :
 ```
 Lis app/spot.be. Explique en 5 phrases ce que fait l'application. 
 ```
@@ -143,6 +145,7 @@ enregistrez, puis exécutez uniquement :
 ```
 
 Résultat attendu : `OK  /spot.be (… Byte)`, `OK  BrRestart`, `OK  heap_free … kB`.
+
 3. Vérifiez. Journal (log) : attendez-vous à voir `SPOT: v… geladen` ; aucun message d'erreur lié à `BRY:`
 (les messages `BRY: Berry initialized` et `BRY: Successfully loaded …` sont normaux) :
 ```sh

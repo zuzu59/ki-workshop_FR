@@ -27,6 +27,7 @@ redémarre le gPlug si la mémoire disponible (heap) tombe en dessous de 100 ko 
 ./upload.sh app/spot.be
 ```
 Résultat attendu : `OK  /spot.be (… Byte)`, `OK  BrRestart`, `OK  heap_free … kB`.
+
 4. Consultez la console. Vérifiez la présence du message `SPOT: … geladen` (chargé) ; aucun message d'erreur ne doit apparaître avec `BRY:`
 (les messages `BRY: Berry initialized` et `BRY: Successfully loaded …` sont normaux) :
 ```sh
@@ -48,6 +49,7 @@ Les noms des menus correspondent à ceux du gPlug (en allemand ; les équivalent
 BrRestart
 ```
 Consultez la console : vérifiez la présence de `SPOT: … geladen` et l'absence de message d'erreur avec `BRY:`.
+
 4. Vérifiez la mémoire tas (*heap*) ; elle doit être supérieure à 100 ko. Chaque commande `BrRestart` consomme environ 1 ko ; seul un redémarrage complet permet de récupérer cet espace :
 ```
 Br tasmota.gc() return tasmota.memory("heap_free")
