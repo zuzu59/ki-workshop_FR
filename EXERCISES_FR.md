@@ -62,7 +62,7 @@ Si vous n'utilisez pas Docker (installation native, voir `SETUP_OPENCODE_FR.md`)
 ```sh
 opencode
 ```
-opencode démarre dans l'agent **build** ; avant la première invite (prompt), basculez sur l'agent **plan** (touche `Tab`, voir
+opencode démarre dans l'agent **build** ; avant la première invite (prompt), basculez sur l'agent **plan** (touche `SHIFT+TAB`, voir
 *Déroulement par étape*).
 
 ## Déroulement par étape
@@ -77,9 +77,9 @@ Pour basculer de l'un à l'autre, utilisez la touche **`Tab`** (ou `Maj+Tab`) ; 
 
 opencode démarre dans l'agent **build**. Chaque étape se déroule comme suit :
 
-1. **Passer à l'agent plan** : appuyez sur `Tab` jusqu'à ce que `Plan` s'affiche en bas.
+1. **Passer à l'agent plan** : appuyez sur `SHIFT+TAB` jusqu'à ce que `Plan` s'affiche en bas.
 2. Saisissez la consigne de « planification » pour l'étape en cours et validez. Examinez le plan ; s'il s'écarte des directives (apparition de boucles infinies, cases à cocher, JavaScript, etc.), refusez-le dans l'agent plan, rappelez la consigne initiale et demandez un nouveau plan. Ne poursuivez que lorsque le plan est conforme. 
-3. **Passer en mode « build »** : appuyez sur la touche `Tab` jusqu'à ce que « Build » s'affiche en bas.
+3. **Passer en mode « build »** : appuyez sur la touche `SHIFT+TAB` jusqu'à ce que « Build » s'affiche en bas.
 4. Saisissez et envoyez la consigne « mettre en œuvre » (valable pour toutes les étapes, en bas). Autorisez les commandes shell une par une
 (uniquement `./upload.sh`, `./log.sh`, `./brcmd.sh`, `berry`, `cp`, `git`).
 5. Signalez toute erreur survenue dans l'agent **build** en utilisant la consigne « signaler l'erreur » (ne changez pas de mode).
@@ -126,10 +126,10 @@ Spécifications :
 - Les barres doivent être dessinées derrière la courbe des prix (la courbe reste au premier plan).
 - Utilisez les outils existants (`chart_curves`, `value_range`, `y_scale`). Ne créez pas de nouvelle boucle sur les créneaux (slots) en dehors d'une méthode `send_bars` ; n'ajoutez pas de JavaScript et ne modifiez rien d'autre. 
 
-### Consigne « planifier » (dans plan-Agent, appuyer sur `Tab` jusqu'à ce que `Plan` s'affiche en bas)
+### Consigne « planifier » (dans plan-Agent, appuyer sur `SHIFT+TAB` jusqu'à ce que `Plan` s'affiche en bas)
 
 ```
-Consultez @AGENTS_FR.md, @TASMOTA_BERRY_API_FR.md ainsi que la section « F3 Chart » dans @app/spot.be,
+Consultez @AGENTS.md, @TASMOTA_BERRY_API.md ainsi que la section « F3 Chart » dans @app/spot.be,
 repérée par le commentaire « ERWEITERUNGSPUNKT Schritt 1 » (POINT D'EXTENSION Étape 1).
 
 Tâche : Dans le graphique journalier, l'énergie injectée par quart d'heure (en kWh) doit apparaître sous forme de barres vertes, situées derrière la ligne de prix.
@@ -178,7 +178,7 @@ Consignes :
 - Cas de test : en mode simulation, la journée actuelle présente une baisse à la mi-journée avec des prix négatifs (la ligne de prix
 dans le graphique passe sous 0). Ne pas se baser sur `SpotPrices` : cela n'affiche que les 10 prochaines heures ; le soir, la baisse de la mi-journée est déjà passée.
 
-### Prompt « planifier » (dans l'agent `plan`, appuyer sur `Tab` jusqu'à ce que `Plan` s'affiche en bas)
+### Prompt « planifier » (dans l'agent `plan`, appuyer sur `SHIFT+TAB` jusqu'à ce que `Plan` s'affiche en bas)
 
 ```
 Consultez la section « F3 Chart » dans le fichier @app/spot.be, repérée par le commentaire « ERWEITERUNGSPUNKT Schritt 2 ».
@@ -249,7 +249,7 @@ Spécifications :
 - Alignement horizontal identique au graphique supérieur (l'heure *n* doit être superposée dans les deux graphiques) ; le marqueur « maintenant » doit également figurer en bas.
 - Envoi par segments, comme pour le graphique supérieur (via `tasmota.web_send` pour chaque partie), sans construire une chaîne de caractères globale.
 
-### Prompt « planifier » (dans l'agent `plan`, appuyez sur `Tab` jusqu'à ce que `Plan` s'affiche en bas)
+### Prompt « planifier » (dans l'agent `plan`, appuyez sur `SHIFT+TAB` jusqu'à ce que `Plan` s'affiche en bas)
 
 ```
 Lisez la section "F3 Chart" dans le fichier @app/spot.be, identifiée par le commentaire "ERWEITERUNGSPUNKT Schritt 4".
@@ -291,7 +291,7 @@ inférieur : « Rémunération CHF/¼h ».
 - **Mesure et rapport des coûts** : taille de `/spot.svg` dans l'environnement de bureau (`SVG … octets`),
 durée d'exécution de `fill_values` sur l'appareil, état du tas (heap) avant/après. Seuils : SVG < 16 ko, tas > 100 ko.
 
-### Consigne « planifier » (dans l'agent `plan`, utiliser la touche `Tab` jusqu'à ce que « Plan » s'affiche en bas)
+### Consigne « planifier » (dans l'agent `plan`, utiliser la touche `SHIFT+TAB` jusqu'à ce que « Plan » s'affiche en bas)
 
 ```
 Consultez la section « F3 Chart » dans le fichier `@app/spot.be`, identifiée par le commentaire « ERWEITERUNGSPUNKT Schritt 5 » (POINT D'EXTENSION Étape 5).
