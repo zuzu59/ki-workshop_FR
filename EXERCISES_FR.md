@@ -1,10 +1,10 @@
 # Exercices – Travailler avec l'agent de codage sur le gPlug
 
-📄 [Cet exercice en PDF (A4)](docs/EXERCISES.pdf) · [Terminologie : LEGENDE.md](LEGENDE.md)
+📄 [Cet exercice en PDF (A4)](docs/EXERCISES_FR.pdf) · [Terminologie : LEGENDE_FR.md](LEGENDE_FR.md)
 
 Ces exercices portent sur le **cycle de travail avec l'agent** : fournir le contexte → formuler une tâche petite et vérifiable → charger le code sur l'appareil → consulter la console → rapporter les erreurs textuellement. L'application Berry `app/spot.be` sert uniquement de support à l'exercice. Les exercices modifient uniquement l'affichage, jamais le flux de données ; en cas d'erreur, le cœur de l'application reste intact.
 
-Bases : `AGENTS.md` (règles et outils, lus automatiquement par l'agent), `TASMOTA_BERRY_API.md` (l'API Tasmota ; sans elle, l'agent doit deviner), `SETUP_OPENCODE.md` §7 (fonctionnement de l'agent).
+Bases : `AGENTS_FR.md` (règles et outils, lus automatiquement par l'agent), `TASMOTA_BERRY_API_FR.md` (l'API Tasmota ; sans elle, l'agent doit deviner), `SETUP_OPENCODE_FR.md` §7 (fonctionnement de l'agent).
 
 ## Aperçu : du point de départ à l'application finale en 4 étapes, plus une étape 5
 
@@ -57,7 +57,7 @@ cat .gplug
 ```sh
 ./docker-run.sh
 ```
-Si vous n'utilisez pas Docker (installation native, voir `SETUP_OPENCODE.md`), depuis le dossier du dépôt :
+Si vous n'utilisez pas Docker (installation native, voir `SETUP_OPENCODE_FR.md`), depuis le dossier du dépôt :
 ```sh
 opencode
 ```
@@ -127,7 +127,7 @@ Spécifications :
 ### Consigne « planifier » (dans plan-Agent, appuyer sur `Tab` jusqu'à ce que `Plan` s'affiche en bas)
 
 ```
-Consultez @AGENTS.md, @TASMOTA_BERRY_API.md ainsi que la section « F3 Chart » dans @app/spot.be,
+Consultez @AGENTS_FR.md, @TASMOTA_BERRY_API_FR.md ainsi que la section « F3 Chart » dans @app/spot.be,
 repérée par le commentaire « ERWEITERUNGSPUNKT Schritt 1 » (POINT D'EXTENSION Étape 1).
 
 Tâche : Dans le graphique journalier, l'énergie injectée par quart d'heure (en kWh) doit apparaître sous forme de barres vertes, situées derrière la ligne de prix.
@@ -323,12 +323,12 @@ Dans le navigateur : **recharger** la page (Cmd+R / F5), afficher ou masquer les
 
 ## Écueils fréquents (relevés lors d'un essai : 30 min, 14 téléversements)
 
-1. **Axes supplémentaires.** Seul l'axe des kWh à gauche (issu de l'étape 1) est autorisé (ainsi que l'axe des CHF dans un graphique dédié, issu de l'étape 4) ; c'est ce qui est stipulé dans `AGENTS.md`. Si l'agent tente d'ajouter d'autres libellés : refusez et rappelez la consigne.
+1. **Axes supplémentaires.** Seul l'axe des kWh à gauche (issu de l'étape 1) est autorisé (ainsi que l'axe des CHF dans un graphique dédié, issu de l'étape 4) ; c'est ce qui est stipulé dans `AGENTS_FR.md`. Si l'agent tente d'ajouter d'autres libellés : refusez et rappelez la consigne.
 2. **Cases à cocher / `onchange` dans le graphique :** ne fonctionnent jamais. Tasmota remplace la zone du capteur toutes les quelques secondes via AJAX, ce qui empêche l'exécution des scripts qu'elle contient. Il faut étendre la légende via `chart_curves()`.
 3. **Boucle de dessin personnalisée.** L'agent duplique la logique de tracé de lignes (parfois deux fois). Exigez l'utilisation de `send_polyline` ou `send_bars`.
 4. **Duplication au lieu de modification** (étapes 3/4) : utilisation de `send_x_axis_3d`, `value_range2`, etc. Consigne : « Modifiez la méthode existante et supprimez la copie. »
 5. **Mémoire (Heap).** Chaque téléversement consomme environ 1 ko, qui n'est récupéré qu'après un redémarrage ; `upload.sh` redémarre automatiquement l'appareil si la mémoire disponible passe sous les 100 ko. Si l'agent échoue deux fois de la même manière : interrompez le processus et examinez vous-même les logs.
-6. **API inventée** (ex: `webserver.content_send` dans `web_sensor`, ou des fonctions `tasmota.*` inexistantes). Renvoyez vers `TASMOTA_BERRY_API.md` ; seuls les éléments qui y figurent sont valides.
+6. **API inventée** (ex: `webserver.content_send` dans `web_sensor`, ou des fonctions `tasmota.*` inexistantes). Renvoyez vers `TASMOTA_BERRY_API_FR.md` ; seuls les éléments qui y figurent sont valides.
 7. **`BrRestart` / `Restart` via `brcmd.sh` :** interdits (provoquent un plantage ou un redémarrage). Recharger l'application
 uniquement via `./upload.sh`.
 8. **`var` manquant** pour une nouvelle variable d'instance → erreur `BRY:` avec numéro de ligne lors du chargement
