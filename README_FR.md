@@ -24,11 +24,11 @@ et un éditeur de texte. Aucune autre préparation n'est nécessaire.
 
 ## Introduction
 
-Diapositives d'introduction : <https://gplug-ch.github.io/ki-workshop/slides/>
+Diapositives d'introduction : <https://zuzu59.github.io/ki-workshop_FR/slides/>
 
 ## Configuration sur place
 
-Guide étape par étape avec les résultats attendus : [`RUNBOOK.md`](RUNBOOK.md). En résumé :
+Guide étape par étape avec les résultats attendus : [`RUNBOOK_FR.md`](RUNBOOK_FR.md). En résumé :
 
 1. Téléchargez le dossier de l'atelier (au format ZIP) et lancez `./docker-run.sh`. Chargement
 Charge l'image prête à l'emploi et lance l'agent opencode. L'accès au modèle de langage
@@ -43,11 +43,11 @@ echo <gplug-ip> > .gplug
 L'interface web affiche désormais la courbe des prix (simulateur ; aucun compteur intelligent requis).
 
 Commandes pour Linux, macOS et Ubuntu sous WSL. Pour Windows, utilisez uniquement PowerShell :
-[`WINDOWS_POWERSHELL.md`](WINDOWS_POWERSHELL.md).
+[`WINDOWS_POWERSHELL.md`](WINDOWS_POWERSHELL_FR.md).
 
 ## Exercice (45 min)
 
-Déroulement, prompts et étapes de vérification : [`EXERCISES.md`](EXERCISES.md) ([PDF, A4](docs/EXERCISES.pdf)).
+Déroulement, prompts et étapes de vérification : [`EXERCISES_FR.md`](EXERCISES_FR.md) ([PDF, A4](docs/EXERCISES.pdf)).
 
 1. Graphique en barres de l'énergie avec axe en kWh — **Obligatoire**
 2. Prix négatif : barres en orange, zone sous 0 ombrée — **Obligatoire**
@@ -60,17 +60,17 @@ En cas de blocage : copiez le point de contrôle de l'étape précédente (`app/
 
 - Reconnectez le gPlug à votre réseau Wi-Fi domestique.
 - Pour une utilisation avec un compteur intelligent : définissez `"sim": false` dans `app/spot.be` et exécutez `./upload.sh app/spot.be`.
-- Poursuivez le travail avec votre propre accès au modèle de langage : [`SETUP_OPENCODE.md`](SETUP_OPENCODE.md) ;
+- Poursuivez le travail avec votre propre accès au modèle de langage : [`SETUP_OPENCODE_FR.md`](SETUP_OPENCODE.md) ;
 construisez l'image localement avec `./docker-run.sh --build`. - Poursuivre le travail sans IA, en utilisant uniquement un éditeur de texte et un transfert manuel (via script ou interface web) :
-[`SETUP_OHNE_KI.md`](SETUP_OHNE_KI.md).
+[`SETUP_OHNE_KI.md`](SETUP_OHNE_KI_FR.md).
 
 ## Fichiers importants
 
 - `app/spot.be` – l'application sur laquelle vous travaillez. `app/steps/` – points de contrôle (checkpoints) après chaque étape.
 - `upload.sh`, `brcmd.sh`, `log.sh` – outils de gestion de l'appareil (téléversement, exécution de commandes Berry, console).
-- `AGENTS.md` – règles destinées à l'agent de codage (lit automatiquement `opencode`).
-- `LEGENDE.md` – terminologie et abréviations.
-- `WINDOWS_POWERSHELL.md` – spécificités pour Windows (sans Ubuntu).
+- `AGENTS_FR.md` – règles destinées à l'agent de codage (lit automatiquement `opencode`).
+- `LEGENDE_FR.md` – terminologie et abréviations.
+- `WINDOWS_POWERSHELL_FR.md` – spécificités pour Windows (sans Ubuntu).
 
 
 ## Licence
