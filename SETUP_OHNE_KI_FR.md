@@ -51,12 +51,14 @@ Consultez la console : vérifiez la présence de `SPOT: … geladen` et l'absenc
 4. Vérifiez la mémoire tas (*heap*) ; elle doit être supérieure à 100 ko. Chaque commande `BrRestart` consomme environ 1 ko ; seul un redémarrage complet permet de récupérer cet espace :
 ```
 Br tasmota.gc() return tasmota.memory("heap_free")
-​​  ```
+```
+
 Si la valeur est inférieure à 100 ko, exécutez `Restart 1` (le gPlug redémarrera, ce qui prend environ 20 secondes).
 
 ## 4. Optionnel : test sur ordinateur portable
 
-Détectez les erreurs rapidement, sans avoir besoin de téléverser des fichiers. L'interpréteur `berry` est inclus dans l'image Docker ; en l'absence d'accès au modèle linguistique, `docker-run.sh` affichera simplement un `HINWEIS` (avertissement/note), mais le shell restera fonctionnel. ```sh
+Détectez les erreurs rapidement, sans avoir besoin de téléverser des fichiers. L'interpréteur `berry` est inclus dans l'image Docker ; en l'absence d'accès au modèle linguistique, `docker-run.sh` affichera simplement un `HINWEIS` (avertissement/note), mais le shell restera fonctionnel. 
+```sh
 curl -s -o app/bkw.json https://api.bkw.ch/api/dyntariffs/v1/Tariffs/energyreturn   # une seule fois
 ./docker-run.sh bash
 cd app && berry desktop_harness.be

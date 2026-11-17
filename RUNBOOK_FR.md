@@ -46,11 +46,13 @@ unzip -q ki-workshop.zip && mv ki-workshop-main ki-workshop && rm ki-workshop.zi
 cd ki-workshop
 ```
 
-Si Ubuntu affiche `unzip: command not found`, installez le paquet correspondant, puis répétez les commandes ci-dessus. ```sh
+Si Ubuntu affiche `unzip: command not found`, installez le paquet correspondant, puis répétez les commandes ci-dessus. 
+
+```sh
 sudo apt install -y unzip
 ```
 
-Si vous connaissez `git`, clonez plutôt le dépôt :
+Si vous connaissez Git, clonez plutôt le dépôt :
 
 ```sh
 cd ~
@@ -70,11 +72,11 @@ Rien à faire : l'accès à Infomaniak prévu pour l'atelier est déjà intégr�
 
 ## 3. Charger l'image Docker et tester l'agent
 
-1. Chargez l'image et vérifiez `opencode`. Lors de la première exécution, le script télécharge l'image prête à l'emploi depuis GitHub (environ 300 Mo, 1 à 2 minutes). Résultat attendu : `opencode v2.0.32`. 
+1. Chargez l'image et vérifiez la version d'opencode. Lors de la première exécution, le script télécharge l'image depuis GitHub (environ 300 Mo, 1 à 2 minutes). Résultat attendu : `opencode v2.0.32`. 
 ```sh
 ./docker-run.sh opencode --version
 ```
-2. Uniquement si vous avez cloné le dépôt : configurez votre identité pour les commits (le script vous demandera votre nom et votre adresse e-mail). Sinon, passez cette étape (vous sauvegarderez vos travaux durant l'exercice en créant une copie de `app/spot.be`) :
+2. Uniquement si vous avez cloné le dépôt : configurez votre identité pour les commits (le script vous demandera votre nom et votre adresse e-mail). Sinon, passez cette étape (vous pourrez sauvegarder votre travail en copiant le fichier `app/spot.be` durant l'exercice) :
 ```sh
 ./docker-run.sh bash -c 'read -rp "Name: " n; read -rp "E-Mail: " e; git config user.name "$n"; git config user.email "$e"'
 ```
@@ -82,11 +84,11 @@ Rien à faire : l'accès à Infomaniak prévu pour l'atelier est déjà intégr�
 ```sh
 ./docker-run.sh
 ```
-Résultat attendu : l'interface `opencode` s'affiche, avec le modèle `Qwen3.5 122B-A10B (Infomaniak AI (Schweiz))` indiqué en bas. 4. Saisir la première question :
+Résultat attendu : l'interface opencode s'affiche, avec le modèle `Qwen3.5 122B-A10B (Infomaniak AI (Schweiz))` indiqué en bas. 4. Saisir la première question :
 ```
 Lis app/spot.be. Explique en 5 phrases ce que fait l'application. 
 ```
-Résultat attendu : L'agent lit les fichiers (appels d'outils visibles) et fournit une réponse pertinente. 
+Résultat attendu : L'agent lit les fichiers (les appels aux outils sont visibles) et fournit une réponse pertinente. 
 Quitter avec `/exit`.
 
 ## 4. Connexion du gPlug au réseau Wi-Fi de l'atelier
@@ -95,18 +97,97 @@ L'appareil ne connaît que votre réseau Wi-Fi domestique et ne le trouve pas ic
 
 1. Branchez le gPlug à un ordinateur portable ou à un adaptateur secteur via un câble USB, puis patientez 1 à 2 minutes.
 2. À l'aide de votre ordinateur portable ou de votre smartphone, recherchez le réseau Wi-Fi du gPlug (le nom commence par `gPlug` ou `tasmota`) et connectez-vous. Si aucune page ne s'ouvre automatiquement, saisissez `http://192.168.4.1` dans votre navigateur.
-3. Sélectionnez le réseau Wi-Fi de l'atelier, saisissez le mot de passe indiqué sur la fiche, puis cliquez sur *Enregistrer* (*Save*). La page affichera la **nouvelle adresse IP** du gPlug : notez-la.
+3. Sélectionnez le réseau Wi-Fi de l'atelier, saisissez le mot de passe indiqué sur la fiche, puis cliquez sur *Enregistrer* (Speichern). La page affichera la **nouvelle adresse IP** du gPlug : notez-la.
 4. Reconnectez votre ordinateur portable au réseau Wi-Fi de l'atelier, puis ouvrez `http://<adresse-ip-du-gplug>` dans votre navigateur. 
 
 Résultat attendu : La page d'accueil Tasmota du gPlug s'affiche.
 
-Si le réseau Wi-Fi du gPlug n'apparaît pas après 3 minutes, faites appel à un assistant.
+Si le réseau Wi-Fi du gPlug n'apparaît pas après 3 minutes, faites appel à un animateur.
 
-## 5. Vérification du micrologiciel (firmware) et du fuseau horaire
+## 5. Vérification du firmware, fuseau horaire
 
-Les noms des menus correspondent à ceux affichés sur le gPlug (en allemand, avec la traduction anglaise entre parenthèses).
+Les noms des menus correspondent à ceux du gPlug (en allemand ; les équivalents en anglais sont indiqués entre parenthèses).
 
-1. *Informations* (*Information*), ligne *Version Tasmota* (*Program Version*) :
+1. *Informationen* (*Information*), ligne *Tasmota Version* (*Program Version*) :
 - **15.3.0 ou version ultérieure** : passez à l'étape 2.
-- **Version antérieure** : faites appel à un assistant ; ne tentez pas la mise à jour vous-même. Le gPlug nécessite un micrologiciel spécifique, disponible sur gplug.ch (incluant un script de gestion du compteur) ; le micrologiciel Tasmota standard ne convient pas.
-2. *Outils* (*Tools*) → *Console* (*Console*). Ne pas utiliser le terminal ; saisissez ces deux lignes, l'une après l'autre, dans...
+- **Version antérieure** : demandez de l'aide ; ne procédez pas vous-même à la mise à jour. Le gPlug nécessite son propre firmware,
+disponible sur gplug.ch (incluant un script pour le compteur) ; le firmware standard de Tasmota n'est pas compatible.
+2. *Werkzeuge* (*Tools*) → *Konsole* (*Console*). Ne pas utiliser le terminal : saisissez ces deux lignes une par une dans
+la console, en validant chacune par la touche Entrée. 
+```
+Timezone 99
+```
+```
+Time
+```
+Résultat attendu : la commande `Time` affiche l'heure actuelle (avec prise en compte correcte de l'heure d'été/hiver).
+
+Laissez la page de l'interface web (WebUI) ouverte ; vous en aurez besoin pour la suite de l'exercice.
+
+## 6. Installation du « Starter » sur l'appareil
+
+1. Saisissez l'adresse IP. La commande vous demande l'adresse IP obtenue à l'étape 4 (saisissez uniquement l'adresse IP, par ex. `192.168.1.50`) :
+```sh
+printf 'gPlug-IP: '; read -r ip; echo "$ip" > .gplug
+```
+2. Dans l'interface web, allez dans *Werkzeuge* (*Tools*) → *Dateisystem verwalten* (*Manage File system*) : un fichier
+`autoexec.be` existe-t-il déjà ? 
+- **Non** :
+```sh
+./upload.sh app/spot.be app/autoexec.be
+```
+- **Oui** : ne l'écrasez pas. Modifiez-le via l'interface web, ajoutez la ligne `load("spot")`,
+enregistrez, puis exécutez uniquement :
+```sh
+./upload.sh app/spot.be
+```
+
+Résultat attendu : `OK  /spot.be (… Byte)`, `OK  BrRestart`, `OK  heap_free … kB`.
+3. Vérifiez. Journal (log) : attendez-vous à voir `SPOT: v… geladen` ; aucun message d'erreur lié à `BRY:`
+(les messages `BRY: Berry initialized` et `BRY: Successfully loaded …` sont normaux) :
+```sh
+./log.sh
+```
+État (status) : attendez-vous à un JSON contenant `"Sim":true` :
+```sh
+./brcmd.sh 'tasmota.cmd("SpotStatus")'
+```
+4. Rechargez l'interface Web (Cmd+R / F5). 
+
+Résultat attendu : trois en-têtes (prix spot actuel, injection aujourd'hui, rémunération aujourd'hui) et un graphique
+affichant une courbe de prix cyan sur une journée. Survolez le graphique avec la souris : l'heure et le prix s'affichent.
+
+## C'est prêt ?
+
+| Vérification | Résultat attendu |
+|---|---|
+| `./docker-run.sh` | opencode avec le modèle Qwen3.5 ; répond correctement |
+| `./log.sh` | `SPOT: v… geladen` ; aucune erreur `BRY:` |
+| `./brcmd.sh 'tasmota.cmd("SpotStatus")'` | `"Sim":true` ; Heap supérieur à 100 ko |
+| Interface Web | Courbe de prix ; le curseur affiche les valeurs |
+
+Tout est au vert ? Passez à la suite : [`EXERCISES.md`, section *Préparation*](https://github.com/gplug-ch/ki-workshop/blob/main/EXERCISES.md#vorbereitung-5-min) (notez la valeur `HeapFree`).
+
+## Problèmes fréquents
+
+| Symptôme | Solution |
+|---|---|
+| `docker: command not found` / `Cannot connect to the Docker daemon` | Lancez Docker Desktop (sous Windows : activez l'intégration WSL pour Ubuntu), ouvrez un nouveau terminal et recommencez l'étape 3 |
+| Le téléchargement de l'image s'interrompt | Relancez `./docker-run.sh bash` ; vérifiez votre connexion Wi-Fi ; demandez de l'aide |
+| `Permission denied` lors de l'exécution de `./upload.sh` | Exécutez `chmod +x *.sh` |
+| `AVERTISSEMENT : INFOMANIAK_PRODUCT_ID … non défini` / `method_not_found` | Appeler un animateur (image de l'atelier manquante ?) |
+| `ERREUR : http://… inaccessible` | Adresse IP incorrecte dans `.gplug`, ou l'ordinateur n'est pas connecté au réseau Wi-Fi de l'atelier |
+| Le téléchargement indique « Espace insuffisant » | Exécuter à nouveau `./upload.sh` |
+| `!! heap_free … < 100 ko : redémarrage de l'appareil` | Normal ; le script attend de lui-même (environ 20 s) |
+| Graphique absent, heure incorrecte | Oubli de `Timezone 99` (étape 5.2) |
+| Autres erreurs liées à l'agent | Consulter la section *Dépannage* dans `SETUP_OPENCODE.md` |
+
+## Après l'atelier
+
+- Reconnecter le gPlug au réseau Wi-Fi domestique : branchez-le chez vous ; il diffusera à nouveau son propre réseau Wi-Fi. Répétez l'étape 4
+avec votre réseau Wi-Fi domestique.
+- Utiliser les valeurs réelles du compteur intelligent (Smart Meter) au lieu du simulateur : modifiez `app/spot.be` en réglant `"sim": false`, puis exécutez `./upload.sh app/spot.be`.
+- Poursuivre avec l'IA : [`SETUP_OPENCODE.md`](SETUP_OPENCODE.md) ; sans IA (utilisation d'un éditeur et téléchargement manuel) :
+[`SETUP_OHNE_KI.md`](SETUP_OHNE_KI.md).
+
+Passer à l'**exercice (45 min)** : [lien](https://github.com/gplug-ch/ki-workshop/tree/main#%C3%BCbung-45-min).

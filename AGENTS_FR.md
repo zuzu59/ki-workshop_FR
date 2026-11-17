@@ -59,14 +59,27 @@ L'appareil est défini dans `.gplug` (une ligne, adresse IP) ou dans la variable
 5. Vérifier via `./brcmd.sh` si le résultat attendu est obtenu. Contrôler la mémoire (heap).
 6. Faire un bref compte-rendu : modifications apportées, vérifications effectuées, points restant à traiter. L'utilisateur effectue lui-même une vérification via l'interface web (WebUI).
 
-Si une étape échoue deux fois de la même manière : interrompre le processus, afficher le message d'erreur et demander conseil à l'utilisateur. ## 5. Opérations interdites sur l'appareil
+Si une étape échoue deux fois de la même manière : interrompre le processus, afficher le message d'erreur et demander conseil à l'utilisateur. 
 
-Ne jamais exécuter les commandes suivantes, y compris via `tasmota.cmd(...)` : `Reset`, `Restart`, `BrRestart` (l'exécution depuis Berry provoque un plantage de l'appareil ; le redémarrage de l'application n'est alors possible que via `./upload.sh` ou `load("spot")`), `Upgrade`, `OtaUrl`, `Backlog`, les commandes liées au Wi-Fi et aux mots de passe (`Ssid`, `Password`, `WebPassword`, `Wifi…`), `Module`, `Template`, `Gpio…`, `SetOption…`, `Script` (le script gPlug lit le compteur), ainsi que la suppression ou le renommage de fichiers (à l'exception de vos propres fichiers de test CSV). Bien que `brcmd.sh` bloque la plupart de ces commandes, veillez à ne pas les utiliser. En cas de doute sur l'innocuité d'une commande, demandez à une personne compétente.
+## 5. Opérations interdites sur l'appareil
+
+Ne jamais exécuter les commandes suivantes, y compris via `tasmota.cmd(...)` : `Reset`, `Restart`, `BrRestart` (l'exécution depuis Berry provoque un plantage de l'appareil ; le redémarrage de l'application n'est alors possible que via `./upload.sh` ou `load("spot")`), `Upgrade`, `OtaUrl`, `Backlog`, les commandes relatives au Wi-Fi et aux mots de passe (`Ssid`, `Password`, `WebPassword`, `Wifi…`), `Module`, `Template`, `Gpio…`, `SetOption…`, `Script` (le script gPlug lit le compteur), ainsi que la suppression ou le renommage de fichiers (à l'exception de vos propres fichiers de test CSV). Bien que `brcmd.sh` bloque la plupart de ces commandes, veillez à ne pas les utiliser. En cas de doute sur l'innocuité d'une commande, demandez à une personne compétente.
 
 ## 6. Règles de codage (Berry sur Tasmota)
 
 - Berry peut bloquer Tasmota : aucun *callback* ne doit durer plus de 50 ms, aucune attente active (*busy waiting*) dans des boucles n'est autorisée ; les tâches longues doivent être découpées à l'aide de `tasmota.set_timer`.
-- `tasmota.web_send` ne doit être utilisé que dans `web_sensor()`, dans le gestionnaire `page_svg()` (`/spot.svg`) et dans les fonctions auxiliaires `send_*` ; `webserver.on` ne doit être utilisé que dans `web_add_handler()`.
+- `tasmota.web_send` ne doit être utilisé que dans `web_sensor()` ou dans le gestionnaire (*handler*) `pag`e_svg()` (`/spot.svg`) et les fonctions d'assistance `send_*` ; 
+`webserver.on` doit être utilisé uniquement dans `web_add_handler()`.
 - Mode strict : ne pas lire de variables globales non déclarées ; déclarer les membres de classe avec `var`.
-- La mémoire vive (RAM) est limitée (~110 ko disponibles) : évitez de créer de grandes chaînes de caractères ou des listes volumineuses ; envoyez le code HTML/SVG par fragments ; ne jamais analyser la réponse du système (BKW) avec `json.load`.
-- Surveillez le tas (*heap*) : après chaque transfert (*upload*), `upload.sh` affiche la valeur `heap_free`. Si elle descend en dessous de 100 ko, l'appareil redémarre automatiquement (chaque `BrRestart` consomme environ 1 ko ; un redémarrage...
+- Mémoire vive (RAM) limitée (~110 ko disponibles) : éviter de construire de grandes chaînes de caractères ou des listes ; envoyer le code HTML/SVG par fragments ; ne jamais analyser la réponse du système photovoltaïque (BKW) avec `json.load`.
+- Surveiller le tas (heap) : après chaque téléchargement, `upload.sh` affiche `heap_free`. Si la valeur descend en dessous de 100 ko, l'appareil redémarre automatiquement (chaque `BrRestart` consomme environ 1 ko ; seul un redémarrage complet permet de récupérer cet espace). Si, après une modification, la taille du tas diminue de manière persistante (constaté en répétant la même action, après avoir appelé `tasmota.gc()`), c'est que la modification est en cause : il faut en identifier la source avant de poursuivre le développement.
+- Ne jamais lire les fichiers par blocs via `f.read(n)` (dans Tasmota 15.3, cela entraîne une fuite mémoire d'environ 1,5 × n octets par itération) : utiliser plutôt `f.readbytes(n).asstring()` ou `f.readline()` (voir `parse_file` dans `spot.be`).
+- Préserver la mémoire flash : limiter les écritures dans les fichiers au strict nécessaire (par exemple, une écriture CSV par jour ou par heure).
+- Envelopper le corps de chaque fonction de rappel (callback) dans un bloc `try ... except .. as e, m ... end` et journaliser les erreurs via `log("SPOT: ...", 2)`.
+- Enregistrer les nouvelles commandes via `tasmota.add_cmd` et définir des identifiants fixes pour les tâches planifiées (cron), afin d'éviter les doubles enregistrements lors de l'exécution de `load("spot")`.
+- Graphiques (Chart) : ajouter de nouvelles courbes uniquement via `chart_curves()` combiné à `send_polyline` ou `send_bars` (voir section `F3 Chart`). Ne pas implémenter de boucle de dessin personnalisée, ni inclure de balises `<script>` ou de cases à cocher dans la zone dédiée aux capteurs (cette zone étant mise à jour par Tasmota via AJAX, les scripts qu'elle contient ne seront pas exécutés). - Axes : sont autorisés un axe pour le prix à droite (ct./kWh), **un** axe pour les kWh à gauche (étape 1) et, dans le graphique de rémunération, un axe pour les CHF à gauche (étape 4). Toute autre demande d'axe supplémentaire doit faire l'objet d'une concertation préalable.
+- Adopter le style de `spot.be` : commentaires en allemand, méthodes courtes, pas d'astuces complexes.
+
+## 7. Git
+
+Sauvegarder les versions fonctionnelles (avec l'accord de l'utilisateur) : si le dossier du projet est un dépôt Git (présence d'un répertoire `.git`), effectuer un petit commit ; ​​sinon, créer une copie nommée `spot_étapeN.be` dans le dossier du projet. Ne jamais inclure dans les commits les fichiers `.gplug`, les clés API ou le fichier `bkw.json`.

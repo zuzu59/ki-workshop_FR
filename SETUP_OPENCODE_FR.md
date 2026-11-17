@@ -25,7 +25,9 @@ Recommandation : définissez une **limite de dépenses**.
 
 > **Sécurité :** L'utilisation de ce jeton entraîne des coûts. Ne le publiez jamais dans un dépôt de code (commit),
 > et ne le montrez pas dans des discussions ou des captures d'écran. Si vous n'en avez plus besoin,
-> révoquez-le via le Manager. ## 3. Tester l'accès et définir les variables
+> révoquez-le via le Manager. 
+
+## 3. Tester l'accès et définir les variables
 
 ```sh
 export INFOMANIAK_PRODUCT_ID=123456          # votre propre ID de produit
@@ -73,7 +75,7 @@ la commande `/init` n'est pas nécessaire.
 | Commande dans la TUI | Action |
 |---|---|
 | `/models` | Changer de modèle |
-| `/new` | nouvelle session (contexte vierge) |
+| `/new` | nouvelle session (contexte réinitialisé) |
 | `/undo`, `/redo` | annuler / rétablir la dernière modification effectuée par l'agent |
 | `Shift+Tab` | changer d'agent : **build** (modifie les fichiers) ↔ **plan** (lecture/planification uniquement) |
 | `@fichier` | ajouter un fichier au contexte, par ex. `@TASMOTA_BERRY_API.md` |
@@ -81,7 +83,7 @@ la commande `/init` n'est pas nécessaire.
 ## 5. Configuration du fournisseur
 
 Le fichier [`opencode.json`](opencode.json) présent dans le dépôt définit le fournisseur `infomaniak`. opencode le lit
-dans le dossier du dépôt au démarrage. Voici les éléments essentiels :
+au démarrage depuis le dossier du dépôt. Voici l'essentiel :
 
 ```json
 "options": {
@@ -92,9 +94,69 @@ dans le dossier du dépôt au démarrage. Voici les éléments essentiels :
 "small_model": "infomaniak/mistralai/Ministral-3-14B-Instruct-2512"
 ```
 
-La syntaxe `{env:…}` permet de récupérer les variables définies à l'étape 3 ; le jeton (token) et l'identifiant ne sont jamais inscrits directement dans le fichier. Le modèle `small_model`
-est utilisé pour les tâches secondaires (comme la génération du titre de la session). Le bloc `permission` autorise les modifications dans le dépôt, demande confirmation pour les commandes shell, et interdit les commandes `rm`, `sudo` ainsi que tout accès en dehors du dépôt. Il est également possible de configurer le jeton via opencode : `/connect` → **Other** → `infomaniak` ; l'identifiant `INFOMANIAK_PRODUCT_ID` reste toutefois nécessaire.
+`{env:…}` lit les variables définies à l'étape 3 ; le jeton (token) et l'identifiant ne sont jamais stockés dans le fichier. `small_model`
+gère les tâches auxiliaires (comme les titres de session). Le bloc `permission` autorise les modifications au sein du dépôt,
+demande une confirmation pour les commandes shell, et interdit `rm`, `sudo` ainsi que l'accès à des emplacements situés en dehors du dépôt.
+Alternativement, vous pouvez fournir le jeton via `opencode` : `/connect` → **Other** → `infomaniak` ; l'identifiant `INFOMANIAK_PRODUCT_ID` reste toutefois requis.
 
-## 6. Sélection du modèle
+## 6. Sélection d'un modèle
 
-Important po
+La capacité à **appeler des outils** (tool calling) de manière fiable est essentielle pour les agents. Les tarifs pour 1 million de jetons (entrée/sortie) sont basés sur
+[models.dev](https://models.dev) en date d'octobre 2026.
+
+| ID du modèle | Contexte | Prix (entrée/sortie) | Cas d'usage |
+|---|---|---|---|
+| `Qwen/Qwen3.5-122B-A10B-FP8` | 200k | 0,50 / 3,97 | **Standard** : rapide, performant en programmation, économique |
+| `moonshotai/Kimi-K2.6` | 256k | 0,74 / 3,72 | L'agent le plus performant pour les tâches complexes |
+| `Qwen/Qwen3.5-397B-A17B-FP8` | 200k | 0,99 / 4,46 | Solution de repli si le modèle 122B rencontre des difficultés |
+| `mistralai/Mistral-Small-4-119B-2603` | 256k | 0,25 / 0,93 | | abordable, européen |
+| `mistralai/Ministral-3-14B-Instruct-2512` | 100k | 0,37 / 0,50 | `small_model`, tâches auxiliaires |
+
+Ajoutez d'autres modèles à la section `models` du fichier `opencode.json` (en utilisant l'identifiant exact tel qu'indiqué à
+l'étape 3). Les modèles d'« embedding » (plongement lexical, ex. : `bge_…`, `mini_lm_…`) ne sont pas adaptés aux agents.
+
+### Alternative : les modèles Claude d'Anthropic
+
+Un fournisseur intégré à opencode ; le fichier `opencode.json` reste utilisé. Le traitement s'effectue chez Anthropic (États-Unis).
+Un abonnement claude.ai (Pro/Max) ne s'applique **pas** à opencode ; une **clé API** est nécessaire.
+
+1. <https://console.anthropic.com> : créez un compte, ajoutez du crédit dans la section **Billing** (Facturation) et
+définissez une limite de dépenses.
+2. **API Keys** (Clés API) → **Create Key** (Créer une clé) ; copiez-la immédiatement.
+3. Dans opencode : `/connect` → **Anthropic** → **Manually enter API Key** (Saisir manuellement la clé API). Si vous utilisez Docker, cette clé est
+stockée dans le volume `gplug-workshop-data`.
+4. `/models` → par ex. `claude-sonnet-5-5` (standard) ou `claude-haiku-5-5` (abordable).
+
+Si vous n'utilisez pas Docker, vous pouvez également employer la commande `export ANTHROPIC_API_KEY=…`. Pour définir cette variable de manière permanente,
+ajoutez `"model": "anthropic/claude-sonnet-5-5"` dans `opencode.json`. Les mêmes règles de sécurité s'appliquent
+que pour le jeton (token) Infomaniak.
+
+## 7. Flux de travail (Workflow)
+
+1. **Planifiez** en utilisant l'agent `plan` avec le modèle de prompt (prompt template) fourni dans `EXERCISES.md`.
+2. **Fournissez le contexte** : `@TASMOTA_BERRY_API.md @app/spot.be` — sinon, les modèles risquent
+d'halluciner (d'inventer information). API Tasmota.
+3. **Procédez par étapes** en utilisant l'agent `build`.
+4. **Testez** sur l'appareil ; rapportez le message d'erreur obtenu dans la console, **tel quel** (mot pour mot).
+5. Enregistrez les versions fonctionnelles (créez une copie de `app/spot.be` ou utilisez `git commit`) ; si vous faites fausse route, utilisez la commande `/undo`.
+
+## Dépannage
+
+| Symptôme | Cause / Solution |
+|---|---|
+| `Invalid Authentication` (401) | Jeton (token) incorrect ou expiré, ID de produit erroné, ou carte bancaire manquante |
+| Le fournisseur `infomaniak` est absent de `/models` | `opencode` n'a pas été lancé depuis le dossier du dépôt, ou le fichier `opencode.json` contient une erreur JSON |
+| `method_not_found` | `INFOMANIAK_PRODUCT_ID` n'est pas défini dans la session de terminal actuelle (voir étape 3) |
+| `model not found` | L'ID du modèle ne correspond pas ; vérifiez la liste fournie à l'étape 3 |
+| L'agent « discute » mais n'effectue aucune modification | L'agent `plan` est actif (`Shift+Tab`), ou le modèle possède des capacités limitées en matière d'appel d'outils (essayez Qwen 3.5 ou Kimi K 2.6) |
+| Réponses tronquées | Augmentez la valeur `limit.output` du modèle dans `opencode.json` |
+| L'agent ne parvient pas à joindre gPlug dans le conteneur | Utilisez une adresse IP plutôt qu'un nom d'hôte en `.local` dans `.gplug` ; assurez-vous que les appareils sont sur le même réseau Wi-Fi |
+| Un fichier dans le conteneur appartient à `root` (Linux) | Lancez le conteneur via `./docker-run.sh` plutôt qu'en exécutant directement `docker run` |
+| Suivi des coûts | Infomaniak Manager → Outils IA → Utilisation |
+
+## Ressources
+
+- Outils IA Infomaniak : <https://www.infomaniak.com/fr/support/faq/2845> · API : <https://developer.infomaniak.com/docs/api>
+- opencode : <https://opencode.ai/docs/> (fournisseurs, autorisations)
+- Catalogue de modèles : <https://models.dev>
+- Anthropic : <https://console.anthropic.com> · <https://docs.anthropic.com/en/docs/about-claude/models>
