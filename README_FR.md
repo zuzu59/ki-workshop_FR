@@ -43,7 +43,7 @@ echo <gplug-ip> > .gplug
 L'interface web affiche désormais la courbe des prix (simulateur ; aucun compteur intelligent requis).
 
 Commandes pour Linux, macOS et Ubuntu sous WSL. Pour Windows, utilisez uniquement PowerShell :
-[`WINDOWS_POWERSHELL.md`](WINDOWS_POWERSHELL_FR.md).
+[`WINDOWS_POWERSHELL_FR.md`](WINDOWS_POWERSHELL_FR.md).
 
 ## Exercice (45 min)
 
