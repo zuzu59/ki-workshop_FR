@@ -35,6 +35,7 @@ condensed to what a data/telemetry app needs. Verified against docs on 2026-10-1
 tasmota.set_timer(5000, f, "id")        # once, after 5000 ms; id optional
 tasmota.remove_timer("id")
 tasmota.defer(f)                        # run after current event loop
+tasmota.yield	() -> nil                 # Calls Arduino framework yield() function to give back some time to low-level functions, like Wifi. Prevents WDT watchdog from happening.
 tasmota.add_cron("0 */15 * * * *", f, "q15")   # 6 fields, FIRST IS SECONDS; local time
 tasmota.add_cron("0 0 14,16,18 * * *", f, "fetch")
 tasmota.remove_cron("q15")
