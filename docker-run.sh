@@ -26,7 +26,7 @@ elif ! have "$IMAGE" && ! docker pull "$IMAGE" 2>/dev/null; then
 fi
 
 # Eigene Werte nur durchreichen, wenn gesetzt: leeres -e würde die Werte aus dem Image löschen
-env_args=""
+env_args="-e NODE_TLS_REJECT_UNAUTHORIZED=0"
 [ -n "${INFOMANIAK_PRODUCT_ID:-}" ] && env_args="$env_args -e INFOMANIAK_PRODUCT_ID"
 [ -n "${INFOMANIAK_API_KEY:-}" ] && env_args="$env_args -e INFOMANIAK_API_KEY"
 [ -n "${GPLUG:-}" ] && env_args="$env_args -e GPLUG"
@@ -36,7 +36,7 @@ user=""
 [ "$(uname -s)" = "Linux" ] && user="--user $(id -u):$(id -g)"
 
 # shellcheck disable=SC2086
-exec docker run -it --rm $user $env_args \
+exec docker run -it --rm $user $env_args  --name opencode \
   -v "$PWD":/work -w /work \
   -v gplug-workshop-data:/home/agent/.local/share/opencode \
   "$IMAGE" "$@"
